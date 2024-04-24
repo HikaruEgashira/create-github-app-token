@@ -31,6 +31,15 @@ const skipTokenRevoke = Boolean(
   core.getInput("skip-token-revoke") || core.getInput("skip_token_revoke")
 );
 
+const permissions = core
+  .getInput("permissions")
+  .split(",")
+  .reduce((permissions, permission) => {
+    const [name, level] = permission.split(":");
+    permissions[name] = level;
+    return permissions;
+  }, {});
+
 main(
   appId,
   privateKey,
@@ -39,7 +48,9 @@ main(
   core,
   createAppAuth,
   request,
-  skipTokenRevoke
+  skipTokenRevoke,
+  // @ts-ignore
+  permissions
 ).catch((error) => {
   /* c8 ignore next 3 */
   console.error(error);
